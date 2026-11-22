@@ -1,38 +1,38 @@
-﻿/**
- * Digital-Marketing-SVGDC: Navigation & Curriculum Tree Coordinator
+/**
+ * Responsive Sidebar Navigation & State Tracker
  * Department of Physics, S.V.A. Govt. Degree College, Srikalahasti
  */
 
 (function(window) {
   'use strict';
 
-  const STORAGE_COMPLETED_KEY = 'dm_completed_topics';
+  const STORAGE_PREFIX = 'svagdc_comp_';
+  let storageKey = STORAGE_PREFIX + window.location.pathname.replace(/[^a-zA-Z0-9]/g, '_');
   let completedTopics = new Set();
 
-  try {
-    const saved = localStorage.getItem(STORAGE_COMPLETED_KEY);
-    if (saved) {
-      completedTopics = new Set(JSON.parse(saved));
+  function loadCompleted() {
+    try {
+      const saved = localStorage.getItem(storageKey);
+      if (saved) completedTopics = new Set(JSON.parse(saved));
+    } catch (e) {
+      completedTopics = new Set();
     }
-  } catch (e) {
-    console.warn('Could not load completed topics from localStorage', e);
   }
 
   function saveCompleted() {
     try {
-      localStorage.setItem(STORAGE_COMPLETED_KEY, JSON.stringify(Array.from(completedTopics)));
+      localStorage.setItem(storageKey, JSON.stringify(Array.from(completedTopics)));
     } catch (e) {}
   }
 
-  function renderSidebar(activeTopicId = null) {
-    const container = document.getElementById('curriculum-tree');
+  function renderSidebar(activeTopicId) {
+    const container = document.getElementById('curriculum-tree') || document.getElementById('curriculum-nav-container');
     if (!container || !window.CurriculumData) return;
 
     const categories = window.CurriculumData.getCategories();
     const allTopics = window.CurriculumData.getTopics();
 
     let html = '';
-
     categories.forEach(cat => {
       html += `
         <div class="category-group" id="group_${cat.id}" data-category-id="${cat.id}">
@@ -53,13 +53,16 @@
         const t = allTopics[tid];
         if (!t) return;
         const isActive = tid === activeTopicId;
-        const isCompleted = completedTopics.has(tid);
+        const isDone = completedTopics.has(tid);
 
         html += `
-          <li class="topic-item ${isActive ? 'active' : ''} ${isCompleted ? 'completed' : ''}" id="nav_item_${tid}">
+          <li class="topic-item ${isActive ? 'active' : ''} ${isDone ? 'completed' : ''}" id="nav_item_${tid}">
             <a href="#${tid}" title="${t.title}" onclick="window.NavigationTracker.closeMobileSidebar()">
-              <span>${t.title}</span>
-              <i class="fa-solid fa-circle-check check-icon" title="Completed"></i>
+              <span class="topic-status-icon">
+                <i class="${isDone ? 'fa-solid fa-circle-check' : (isActive ? 'fa-solid fa-circle-play' : 'fa-regular fa-circle')}"></i>
+              </span>
+              <span class="topic-title-text">${t.title}</span>
+              ${t.toolType ? '<span class="interactive-pill" title="Interactive Simulator Included"><i class="fa-solid fa-bolt"></i> Lab</span>' : ''}
             </a>
           </li>
         `;
@@ -73,327 +76,264 @@
 
     container.innerHTML = html;
 
-    // Expand category containing active topic
-    if (activeTopicId) {
-      const activeTopic = allTopics[activeTopicId];
-      if (activeTopic) {
-        const activeGroup = document.getElementById(`group_${activeTopic.category}`);
-        if (activeGroup) {
-          activeGroup.classList.remove('collapsed');
-        }
-      }
+    if (typeof window.renderMathInElement === 'function') {
+      try {
+        window.renderMathInElement(container, {
+          delimiters: [
+            { left: '$$', right: '$$', display: true },
+            { left: '$', right: '$', display: false }
+          ],
+          throwOnError: false
+        });
+      } catch(e) {}
+    }
+
+    // Auto-expand the active topic's category
+    if (activeTopicId && allTopics[activeTopicId] && allTopics[activeTopicId].category) {
+      expandCategory(allTopics[activeTopicId].category);
     }
   }
 
-  function updateActiveTopic(topicId) {
-    document.querySelectorAll('.topic-item').forEach(el => el.classList.remove('active'));
-    const targetItem = document.getElementById(`nav_item_${topicId}`);
-    if (targetItem) {
-      targetItem.classList.add('active');
-      targetItem.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-
-      // Ensure parent category group is expanded
-      const parentGroup = targetItem.closest('.category-group');
-      if (parentGroup) {
-        parentGroup.classList.remove('collapsed');
-      }
-    }
-
-    // Update track pill in header
-    const topic = window.CurriculumData ? window.CurriculumData.getTopic(topicId) : null;
-    if (topic) {
-      document.querySelectorAll('.track-pill').forEach(pill => {
-        if (pill.dataset.track === topic.track) {
-          pill.classList.add('active');
-        } else {
-          pill.classList.remove('active');
-        }
-      });
-    }
+  function toggleCategory(catId) {
+    const el = document.getElementById(`group_${catId}`);
+    if (el) el.classList.toggle('collapsed');
   }
 
-  function toggleCategory(categoryId) {
-    const group = document.getElementById(`group_${categoryId}`);
-    if (group) {
-      group.classList.toggle('collapsed');
-    }
+  function expandCategory(catId) {
+    const el = document.getElementById(`group_${catId}`);
+    if (el) el.classList.remove('collapsed');
   }
 
-  function filterSidebar(query) {
-    const q = (query || '').toLowerCase().trim();
-    const items = document.querySelectorAll('.topic-item');
-
-    items.forEach(item => {
-      const text = item.textContent.toLowerCase();
-      if (!q || text.includes(q)) {
-        item.style.display = '';
-      } else {
-        item.style.display = 'none';
-      }
-    });
-
-    document.querySelectorAll('.category-group').forEach(group => {
-      if (!q) return;
-      const hasVisible = Array.from(group.querySelectorAll('.topic-item')).some(it => it.style.display !== 'none');
-      if (hasVisible) {
-        group.classList.remove('collapsed');
-      }
-    });
-  }
-
-  function markCurrentTopicCompleted(topicId = null) {
-    const id = topicId || (window.location.hash ? window.location.hash.slice(1) : null);
-    if (!id) return;
-    completedTopics.add(id);
+  function markCompleted(topicId) {
+    if (!topicId) return;
+    completedTopics.add(topicId);
     saveCompleted();
-    const item = document.getElementById(`nav_item_${id}`);
-    if (item) item.classList.add('completed');
+    const item = document.getElementById(`nav_item_${topicId}`);
+    if (item) {
+      item.classList.add('completed');
+      const icon = item.querySelector('.topic-status-icon i');
+      if (icon) icon.className = 'fa-solid fa-circle-check';
+    }
   }
 
-  function closeMobileSidebar() {
-    const sidebar = document.getElementById('app-sidebar');
-    const backdrop = document.getElementById('sidebar-backdrop');
-    if (sidebar) sidebar.classList.remove('open');
-    if (backdrop) backdrop.classList.remove('active');
-  }
-
-  function toggleMobileSidebar() {
-    const sidebar = document.getElementById('app-sidebar');
-    const backdrop = document.getElementById('sidebar-backdrop');
-    if (sidebar) sidebar.classList.toggle('open');
-    if (backdrop) backdrop.classList.toggle('active');
-  }
-
-  // Reading progress bar updater
-  function initProgressBar() {
-    const mainPane = document.getElementById('app-main');
-    const progressBar = document.getElementById('read-progress-bar');
-    if (!mainPane || !progressBar) return;
-
-    mainPane.addEventListener('scroll', () => {
-      const scrollTop = mainPane.scrollTop;
-      const scrollHeight = mainPane.scrollHeight - mainPane.clientHeight;
-      const progress = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
-      progressBar.style.width = `${progress}%`;
-    });
-  }
-
-  // Sidebar Width Adjustment, Dragging & Desktop Collapse
+  // Sidebar Resizing & Preset Widths
   function initSidebarResizer() {
     const sidebar = document.getElementById('app-sidebar');
     const resizer = document.getElementById('sidebar-resizer');
     const collapseBtn = document.getElementById('sidebar-collapse-btn');
     const floatingToggle = document.getElementById('sidebar-floating-toggle');
-    const presetBtns = document.querySelectorAll('.btn-width-preset');
+    const widthButtons = document.querySelectorAll('.btn-width-preset');
 
-    if (!sidebar) return;
-
-    const STORAGE_KEY = 'dm_sidebar_width';
-    const MIN_WIDTH = 190;
-    const MAX_WIDTH = 520;
-    const DEFAULT_WIDTH = 280;
-
-    function updatePresetButtons(currentWidth) {
-      presetBtns.forEach(btn => {
-        const targetWidth = parseInt(btn.dataset.width, 10);
-        btn.classList.toggle('active', Math.abs(currentWidth - targetWidth) < 15);
-      });
+    const STORAGE_WIDTH_KEY = 'svagdc_sidebar_width';
+    const savedWidth = localStorage.getItem(STORAGE_WIDTH_KEY);
+    if (savedWidth && sidebar) {
+      sidebar.style.width = `${savedWidth}px`;
+      document.documentElement.style.setProperty('--sidebar-width', `${savedWidth}px`);
+      updateActivePresetBtn(parseInt(savedWidth, 10));
     }
 
-    function setSidebarWidth(w, save = true) {
-      const clamped = Math.max(MIN_WIDTH, Math.min(MAX_WIDTH, w));
-      sidebar.style.width = `${clamped}px`;
-      sidebar.style.minWidth = `${clamped}px`;
-      sidebar.classList.remove('collapsed');
-      if (floatingToggle) floatingToggle.style.display = 'none';
-      if (save) {
-        try { localStorage.setItem(STORAGE_KEY, clamped); } catch (e) {}
-      }
-      updatePresetButtons(clamped);
-    }
-
-    function collapseSidebar() {
-      sidebar.classList.add('collapsed');
-      if (floatingToggle) floatingToggle.style.display = 'inline-flex';
-    }
-
-    function expandSidebar() {
-      sidebar.classList.remove('collapsed');
-      if (floatingToggle) floatingToggle.style.display = 'none';
-    }
-
-    // Load saved width
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        setSidebarWidth(parseInt(saved, 10), false);
-      }
-    } catch (e) {}
-
-    // Preset button listeners
-    presetBtns.forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
+    widthButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
         const w = parseInt(btn.dataset.width, 10);
-        setSidebarWidth(w);
+        if (sidebar && !isNaN(w)) {
+          sidebar.style.width = `${w}px`;
+          document.documentElement.style.setProperty('--sidebar-width', `${w}px`);
+          localStorage.setItem(STORAGE_WIDTH_KEY, w);
+          updateActivePresetBtn(w);
+        }
       });
     });
 
-    // Collapse and toggle buttons
-    if (collapseBtn) collapseBtn.addEventListener('click', collapseSidebar);
-    if (floatingToggle) floatingToggle.addEventListener('click', expandSidebar);
+    function updateActivePresetBtn(w) {
+      widthButtons.forEach(b => {
+        if (parseInt(b.dataset.width, 10) === w) b.classList.add('active');
+        else b.classList.remove('active');
+      });
+    }
 
-    // Drag-to-resize logic
-    if (resizer) {
+    if (collapseBtn && sidebar) {
+      collapseBtn.addEventListener('click', () => {
+        sidebar.classList.add('collapsed-desktop');
+        if (floatingToggle) floatingToggle.classList.add('visible');
+      });
+    }
+
+    if (floatingToggle && sidebar) {
+      floatingToggle.addEventListener('click', () => {
+        sidebar.classList.remove('collapsed-desktop');
+        floatingToggle.classList.remove('visible');
+      });
+    }
+
+    if (resizer && sidebar) {
       let isDragging = false;
-      let startX = 0;
-      let startWidth = 0;
 
-      resizer.addEventListener('mousedown', (e) => {
+      resizer.addEventListener('mousedown', () => {
         isDragging = true;
-        startX = e.clientX;
-        startWidth = sidebar.getBoundingClientRect().width;
-        document.body.classList.add('resizing-active');
-        e.preventDefault();
+        document.body.classList.add('resizing-sidebar');
       });
 
-      window.addEventListener('mousemove', (e) => {
+      document.addEventListener('mousemove', (e) => {
         if (!isDragging) return;
-        const delta = e.clientX - startX;
-        setSidebarWidth(startWidth + delta, false);
+        const newWidth = Math.max(200, Math.min(500, e.clientX));
+        sidebar.style.width = `${newWidth}px`;
+        document.documentElement.style.setProperty('--sidebar-width', `${newWidth}px`);
       });
 
-      window.addEventListener('mouseup', () => {
-        if (!isDragging) return;
-        isDragging = false;
-        document.body.classList.remove('resizing-active');
-        const finalWidth = sidebar.getBoundingClientRect().width;
-        try { localStorage.setItem(STORAGE_KEY, Math.round(finalWidth)); } catch (e) {}
+      document.addEventListener('mouseup', () => {
+        if (isDragging) {
+          isDragging = false;
+          document.body.classList.remove('resizing-sidebar');
+          const finalW = parseInt(sidebar.style.width, 10);
+          if (!isNaN(finalW)) {
+            localStorage.setItem(STORAGE_WIDTH_KEY, finalW);
+            updateActivePresetBtn(finalW);
+          }
+        }
       });
 
       resizer.addEventListener('dblclick', () => {
-        setSidebarWidth(DEFAULT_WIDTH);
+        sidebar.style.width = '290px';
+        document.documentElement.style.setProperty('--sidebar-width', '290px');
+        localStorage.setItem(STORAGE_WIDTH_KEY, 290);
+        updateActivePresetBtn(290);
       });
     }
   }
 
-  // Quick Filter Input in Sidebar
+  // Live Sidebar Filter
   function initSidebarFilter() {
-    const input = document.getElementById('sidebar-search-input');
+    const input = document.getElementById('sidebar-search-input') || document.getElementById('curriculum-search');
     if (!input) return;
 
     input.addEventListener('input', (e) => {
-      filterSidebar(e.target.value);
-    });
-
-    window.addEventListener('keydown', (e) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-        e.preventDefault();
-        const modal = document.getElementById('search-modal-backdrop');
-        const modalInput = document.getElementById('search-modal-input');
-        if (modal) {
-          modal.classList.add('active');
-          if (modalInput) {
-            modalInput.value = '';
-            modalInput.focus();
-            window.NavigationTracker.searchGlobal('');
-          }
-        }
-      }
-    });
-  }
-
-  // Global Fast Search Modal (Ctrl+K)
-  function initGlobalSearchModal() {
-    const modal = document.getElementById('search-modal-backdrop');
-    const input = document.getElementById('search-modal-input');
-    const closeBtn = document.getElementById('search-modal-close');
-    const resultsList = document.getElementById('search-results-list');
-
-    if (!modal || !input || !resultsList) return;
-
-    function closeModal() {
-      modal.classList.remove('active');
-    }
-
-    if (closeBtn) closeBtn.addEventListener('click', closeModal);
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) closeModal();
-    });
-
-    input.addEventListener('input', (e) => {
       const q = e.target.value.toLowerCase().trim();
-      if (!window.CurriculumData) return;
+      const groups = document.querySelectorAll('.category-group');
 
-      const topics = window.CurriculumData.getTopics();
-      const categories = window.CurriculumData.getCategories();
-      const matches = [];
-
-      if (q.length > 0) {
-        Object.values(topics).forEach(t => {
-          const matchTitle = t.title.toLowerCase().includes(q);
-          const matchLead = (t.lead || '').toLowerCase().includes(q);
-          const matchContent = (t.htmlContent || '').toLowerCase().includes(q);
-
-          if (matchTitle || matchLead || matchContent) {
-            const cat = categories.find(c => c.id === t.category);
-            matches.push({
-              topic: t,
-              catTitle: cat ? cat.title : 'Curriculum',
-              priority: matchTitle ? 2 : 1
-            });
+      groups.forEach(g => {
+        let hasMatch = false;
+        const items = g.querySelectorAll('.topic-item');
+        items.forEach(it => {
+          const text = it.textContent.toLowerCase();
+          if (!q || text.includes(q)) {
+            it.style.display = '';
+            hasMatch = true;
+          } else {
+            it.style.display = 'none';
           }
         });
-      }
 
-      matches.sort((a, b) => b.priority - a.priority);
-
-      if (matches.length === 0) {
-        resultsList.innerHTML = `
-          <li class="search-result-empty">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <span>${q.length === 0 ? 'Type to search across all SEO, WordPress, Facebook ads, GA4, metrics and lab topics...' : 'No matching topics found.'}</span>
-          </li>
-        `;
-        return;
-      }
-
-      let html = '';
-      matches.slice(0, 15).forEach(({ topic, catTitle }) => {
-        html += `
-          <li class="search-result-item">
-            <a href="#${topic.id}" onclick="document.getElementById('search-modal-backdrop').classList.remove('active')">
-              <div class="result-title">${topic.title}</div>
-              <div class="result-meta">${catTitle} &bull; ${topic.readTime || '5 min read'}</div>
-            </a>
-          </li>
-        `;
+        if (hasMatch) {
+          g.style.display = '';
+          if (q) g.classList.remove('collapsed');
+        } else {
+          g.style.display = 'none';
+        }
       });
-
-      resultsList.innerHTML = html;
     });
   }
 
-  // Export API
-  window.NavigationTracker = {
-    renderSidebar,
-    updateActiveTopic,
-    toggleCategory,
-    filterSidebar,
-    markCurrentTopicCompleted,
-    closeMobileSidebar,
-    toggleMobileSidebar,
-    initProgressBar,
-    initSidebarResizer,
-    initSidebarFilter,
-    initGlobalSearchModal,
-    searchGlobal: (q) => {
-      const input = document.getElementById('search-modal-input');
-      if (input) {
-        input.value = q;
-        input.dispatchEvent(new Event('input'));
+  // Course Dropdown Menu Handler
+  function initCourseDropdown() {
+    const dropdown = document.getElementById('course-dropdown');
+    const dropdownBtn = document.getElementById('course-dropdown-btn');
+    if (!dropdown || !dropdownBtn) return;
+    if (dropdownBtn.dataset.hasDropdownInit === 'true') return;
+    dropdownBtn.dataset.hasDropdownInit = 'true';
+
+    dropdownBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      dropdown.classList.toggle('active');
+      const isExpanded = dropdown.classList.contains('active');
+      dropdownBtn.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
+    });
+
+    // Close on outside click
+    document.addEventListener('click', (e) => {
+      if (!dropdown.contains(e.target)) {
+        dropdown.classList.remove('active');
+        dropdownBtn.setAttribute('aria-expanded', 'false');
       }
-    }
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && dropdown.classList.contains('active')) {
+        dropdown.classList.remove('active');
+        dropdownBtn.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    // Close on link click
+    const links = dropdown.querySelectorAll('.course-dropdown-item');
+    links.forEach(l => {
+      l.addEventListener('click', () => {
+        dropdown.classList.remove('active');
+        dropdownBtn.setAttribute('aria-expanded', 'false');
+      });
+    });
+  }
+
+  // Reading Progress Bar
+  function initReadingProgress() {
+    const bar = document.getElementById('read-progress-bar');
+    const main = document.getElementById('app-main');
+    if (!bar || !main) return;
+
+    main.addEventListener('scroll', () => {
+      const scrollHeight = main.scrollHeight - main.clientHeight;
+      if (scrollHeight > 0) {
+        const percent = (main.scrollTop / scrollHeight) * 100;
+        bar.style.width = `${percent}%`;
+      } else {
+        bar.style.width = '0%';
+      }
+    });
+  }
+
+  function toggleMobileSidebar() {
+    const sb = document.getElementById('app-sidebar');
+    const bd = document.getElementById('sidebar-backdrop');
+    if (sb) sb.classList.toggle('open');
+    if (bd) bd.classList.toggle('active');
+  }
+
+  function closeMobileSidebar() {
+    const sb = document.getElementById('app-sidebar');
+    const bd = document.getElementById('sidebar-backdrop');
+    if (sb) sb.classList.remove('open');
+    if (bd) bd.classList.remove('active');
+  }
+
+  let isNavTrackerInitialized = false;
+  function init() {
+    if (isNavTrackerInitialized) return;
+    isNavTrackerInitialized = true;
+    loadCompleted();
+    initSidebarResizer();
+    initSidebarFilter();
+    initCourseDropdown();
+    initReadingProgress();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+  window.NavigationTracker = {
+    init: init,
+    renderSidebar: renderSidebar,
+    toggleCategory: toggleCategory,
+    expandCategory: expandCategory,
+    markCompleted: markCompleted,
+    toggleMobileSidebar: toggleMobileSidebar,
+    closeMobileSidebar: closeMobileSidebar,
+    initSidebarResizer: initSidebarResizer,
+    initSidebarFilter: initSidebarFilter,
+    initCourseDropdown: initCourseDropdown,
+    initReadingProgress: initReadingProgress
   };
 
 })(window);

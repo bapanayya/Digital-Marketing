@@ -16,6 +16,7 @@
   <!-- Core Academic Theme & Interactive Tools Stylesheets -->
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/interactive-tools.css">
+  <link rel="stylesheet" href="css/presentation-tools.css">
 </head>
 <body>
 
@@ -29,7 +30,7 @@
         <i class="fa-solid fa-bars"></i>
       </button>
 
-      <a href="#dm-course-overview" class="brand-badge">
+      <a href="https://www.youtube.com/@TheCompetitiveEdge-b4z" target="_blank" rel="noopener noreferrer" class="brand-badge" title="Visit our Official YouTube Channel: The Competitive Edge">
         <div class="brand-logo-icon" style="background: linear-gradient(135deg, #f97316, #ec4899);">
           <i class="fa-solid fa-bullhorn"></i>
         </div>
@@ -42,6 +43,7 @@
 
     <!-- Quick Track Switcher Pills -->
     <nav class="track-switcher" aria-label="Curriculum Tracks">
+      <a href="../index.html" class="track-pill" data-track="track-master-portal" title="Return to Master Visual Guide" style="border-color: #38BDF8; color: #0284C7;"><i class="fa-solid fa-house"></i> Master Guide</a>
       <a href="#dm-course-overview" class="track-pill active" data-track="track-unit1">Unit 1: Foundations</a>
       <a href="#web-design-fundamentals" class="track-pill" data-track="track-unit2">Unit 2: Web &amp; SEO</a>
       <a href="#social-media-ecosystem" class="track-pill" data-track="track-unit3">Unit 3: Social &amp; Analytics</a>
@@ -53,26 +55,231 @@
       </a>
     </nav>
 
-    <div class="header-right">
-      <!-- Course Switcher Link to Python Master Portal -->
-      <a href="../Python-SVAGDC/index.html" class="tool-btn" style="text-decoration: none; font-size: 0.78rem; font-weight: 700; color: #3b82f6; border-color: #3b82f6; display: inline-flex; align-items: center; gap: 0.35rem;" title="Switch to Python Master Portal">
-        <i class="fa-brands fa-python"></i> Python
-      </a>
+                            <div class="header-right">
+      <!-- Courses Dropdown Navigator -->
+      <div class="course-dropdown" id="course-dropdown">
+        <button type="button" class="course-dropdown-btn" id="course-dropdown-btn" aria-haspopup="true" aria-expanded="false" title="Switch Course Portal">
+          <i class="fa-solid fa-graduation-cap"></i>
+          <span class="dropdown-active-title">All Courses</span>
+          <i class="fa-solid fa-chevron-down dropdown-arrow"></i>
+        </button>
+        <div class="course-dropdown-menu" id="course-dropdown-menu" role="menu">
+          <div class="dropdown-header-banner">
+            <div class="dropdown-header-title">
+              <i class="fa-solid fa-book-open-reader"></i> S.V.A. GDC Course Portals
+            </div>
+            <span class="dropdown-header-tag">19 Courses</span>
+          </div>
+          
+          <div class="dropdown-section-title">
+            <i class="fa-solid fa-atom"></i> B.Sc. Physics Major Core (Sem I–V)
+          </div>
+          <div class="dropdown-grid">
+          <a href="../Mathematical-Physics-SVAGDC/index.html" class="course-dropdown-item">
+            <div class="course-item-icon" style="background: #6366f122; color: #6366f1;">
+              <i class="fa-solid fa-square-root-variable"></i>
+            </div>
+            <div class="course-item-info">
+              <div class="course-item-name">Math Physics</div>
+              <div class="course-item-meta">Course 1 &bull; Sem-I</div>
+            </div>
+            
+          </a>
+          <a href="../Mechanics-Properties-Matter-SVAGDC/index.html" class="course-dropdown-item">
+            <div class="course-item-icon" style="background: #f9731622; color: #f97316;">
+              <i class="fa-solid fa-shuttle-space"></i>
+            </div>
+            <div class="course-item-info">
+              <div class="course-item-name">Mechanics</div>
+              <div class="course-item-meta">Course 2 &bull; Sem-I</div>
+            </div>
+            
+          </a>
+          <a href="../Waves-Optics-SVAGDC/index.html" class="course-dropdown-item">
+            <div class="course-item-icon" style="background: #06b6d422; color: #06b6d4;">
+              <i class="fa-solid fa-water"></i>
+            </div>
+            <div class="course-item-info">
+              <div class="course-item-name">Waves & Optics</div>
+              <div class="course-item-meta">Course 3 &bull; Sem-II</div>
+            </div>
+            
+          </a>
+          <a href="../Heat-Thermodynamics-SVAGDC/index.html" class="course-dropdown-item">
+            <div class="course-item-icon" style="background: #ea580c22; color: #ea580c;">
+              <i class="fa-solid fa-fire-flame-curved"></i>
+            </div>
+            <div class="course-item-info">
+              <div class="course-item-name">Thermodynamics</div>
+              <div class="course-item-meta">Course 4 &bull; Sem-II</div>
+            </div>
+            
+          </a>
+          <a href="../Atomic-Molecular-Nuclear-SVAGDC/index.html" class="course-dropdown-item">
+            <div class="course-item-icon" style="background: #8b5cf622; color: #8b5cf6;">
+              <i class="fa-solid fa-atom"></i>
+            </div>
+            <div class="course-item-info">
+              <div class="course-item-name">Atomic & Nuclear</div>
+              <div class="course-item-meta">Course 5 &bull; Sem-III</div>
+            </div>
+            
+          </a>
+          <a href="../Basic-Electronics-SVAGDC/index.html" class="course-dropdown-item">
+            <div class="course-item-icon" style="background: #10b98122; color: #10b981;">
+              <i class="fa-solid fa-microchip"></i>
+            </div>
+            <div class="course-item-info">
+              <div class="course-item-name">Basic Electronics</div>
+              <div class="course-item-meta">Course 6 &bull; Sem-III</div>
+            </div>
+            
+          </a>
+          <a href="../Applied-Optics-SVAGDC/index.html" class="course-dropdown-item">
+            <div class="course-item-icon" style="background: #0284c722; color: #0284c7;">
+              <i class="fa-solid fa-compass-drafting"></i>
+            </div>
+            <div class="course-item-info">
+              <div class="course-item-name">Applied Optics</div>
+              <div class="course-item-meta">Course 7 &bull; Sem-III</div>
+            </div>
+            
+          </a>
+          <a href="../Electricity-Magnetism-EMT-SVAGDC/index.html" class="course-dropdown-item">
+            <div class="course-item-icon" style="background: #2563eb22; color: #2563eb;">
+              <i class="fa-solid fa-bolt-lightning"></i>
+            </div>
+            <div class="course-item-info">
+              <div class="course-item-name">Electromagnetism</div>
+              <div class="course-item-meta">Course 8 &bull; Sem-IV</div>
+            </div>
+            
+          </a>
+          <a href="../Analog-Electronics-SVAGDC/index.html" class="course-dropdown-item">
+            <div class="course-item-icon" style="background: #ec489922; color: #ec4899;">
+              <i class="fa-solid fa-wave-square"></i>
+            </div>
+            <div class="course-item-info">
+              <div class="course-item-name">Analog Electronics</div>
+              <div class="course-item-meta">Course 9 &bull; Sem-IV</div>
+            </div>
+            
+          </a>
+          <a href="../Advances-in-Physics-SVAGDC/index.html" class="course-dropdown-item">
+            <div class="course-item-icon" style="background: #4f46e522; color: #4f46e5;">
+              <i class="fa-solid fa-rocket"></i>
+            </div>
+            <div class="course-item-info">
+              <div class="course-item-name">Advances in Physics</div>
+              <div class="course-item-meta">Course 10 &bull; Sem-IV</div>
+            </div>
+            
+          </a>
+          <a href="../Solid-State-Physics-SVAGDC/index.html" class="course-dropdown-item">
+            <div class="course-item-icon" style="background: #14b8a622; color: #14b8a6;">
+              <i class="fa-solid fa-cubes"></i>
+            </div>
+            <div class="course-item-info">
+              <div class="course-item-name">Solid State Physics</div>
+              <div class="course-item-meta">Course 11 &bull; Sem-V</div>
+            </div>
+            
+          </a>
+          </div>
 
-      <!-- Course Switcher Link to Computer Fundamentals Portal -->
-      <a href="../Computer-Fund-OfficeAutomat-SVAGDC/index.html" class="tool-btn" style="text-decoration: none; font-size: 0.78rem; font-weight: 700; color: #0284c7; border-color: #0284c7; display: inline-flex; align-items: center; gap: 0.35rem;" title="Switch to Computer Fundamentals Portal">
-        <i class="fa-solid fa-laptop-code"></i> Comp. Fund.
-      </a>
+          <div class="dropdown-section-title" style="margin-top: 0.6rem;">
+            <i class="fa-solid fa-laptop-code"></i> Computational Physics Electives (Domain E &bull; Sem V &amp; VI)
+          </div>
+          <div class="dropdown-grid">
+          <a href="../Course-12E-Python-Numerical-Methods-SVAGDC/index.html" class="course-dropdown-item">
+            <div class="course-item-icon" style="background: #0284c722; color: #0284c7;">
+              <i class="fa-brands fa-python"></i>
+            </div>
+            <div class="course-item-info">
+              <div class="course-item-name">Python & Numerics</div>
+              <div class="course-item-meta">Course 12E &bull; Sem-V</div>
+            </div>
+            
+          </a>
+          <a href="../Course-13E-Mechanics-Waves-Oscillations-SVAGDC/index.html" class="course-dropdown-item">
+            <div class="course-item-icon" style="background: #0d948822; color: #0d9488;">
+              <i class="fa-solid fa-satellite"></i>
+            </div>
+            <div class="course-item-info">
+              <div class="course-item-name">Mechanics & Waves</div>
+              <div class="course-item-meta">Course 13E &bull; Sem-V</div>
+            </div>
+            
+          </a>
+          <a href="../Course-14E-Optics-Heat-Thermodynamics-SVAGDC/index.html" class="course-dropdown-item">
+            <div class="course-item-icon" style="background: #d9770622; color: #d97706;">
+              <i class="fa-solid fa-sun"></i>
+            </div>
+            <div class="course-item-info">
+              <div class="course-item-name">Optics & Thermo</div>
+              <div class="course-item-meta">Course 14E &bull; Sem-VI</div>
+            </div>
+            
+          </a>
+          <a href="../Course-15E-EMT-Modern-Physics-SVAGDC/index.html" class="course-dropdown-item">
+            <div class="course-item-icon" style="background: #7c3aed22; color: #7c3aed;">
+              <i class="fa-solid fa-atom"></i>
+            </div>
+            <div class="course-item-info">
+              <div class="course-item-name">EMT & Modern Phys</div>
+              <div class="course-item-meta">Course 15E &bull; Sem-VI</div>
+            </div>
+            
+          </a>
+          </div>
 
-      <!-- Course Switcher Link to Applied Optics Portal -->
-      <a href="../Applied-Optics-SVAGDC/index.html" class="tool-btn" style="text-decoration: none; font-size: 0.78rem; font-weight: 700; color: #10b981; border-color: #10b981; display: inline-flex; align-items: center; gap: 0.35rem;" title="Switch to Applied Optics Course 7 Portal">
-        <i class="fa-solid fa-atom"></i> Applied Optics
-      </a>
-
-      <!-- Course Switcher Link to Electronic Instrumentation Portal -->
-      <a href="../Sem5-Electronic-Instrumentation-Minor-2026-wef2023-24/index.html" class="tool-btn" style="text-decoration: none; font-size: 0.78rem; font-weight: 700; color: #059669; border-color: #059669; display: inline-flex; align-items: center; gap: 0.35rem;" title="Switch to Electronic Instrumentation Portal">
-        <i class="fa-solid fa-bolt-lightning"></i> Instrumentation
-      </a>
+          <div class="dropdown-section-title" style="margin-top: 0.6rem;">
+            <i class="fa-solid fa-shapes"></i> Allied Minors &amp; Skill Courses
+          </div>
+          <div class="dropdown-grid">
+          <a href="../Sem5-Electronic-Instrumentation-Minor-2026-wef2023-24/index.html" class="course-dropdown-item">
+            <div class="course-item-icon" style="background: #05966922; color: #059669;">
+              <i class="fa-solid fa-gauge-high"></i>
+            </div>
+            <div class="course-item-info">
+              <div class="course-item-name">Instrumentation</div>
+              <div class="course-item-meta">Minor &bull; Sem-V</div>
+            </div>
+            
+          </a>
+          <a href="../Python-SVAGDC/index.html" class="course-dropdown-item">
+            <div class="course-item-icon" style="background: #3b82f622; color: #3b82f6;">
+              <i class="fa-brands fa-python"></i>
+            </div>
+            <div class="course-item-info">
+              <div class="course-item-name">Python Programming</div>
+              <div class="course-item-meta">Skill &bull; Core & Sci</div>
+            </div>
+            
+          </a>
+          <a href="../Computer-Fund-OfficeAutomat-SVAGDC/index.html" class="course-dropdown-item">
+            <div class="course-item-icon" style="background: #0891b222; color: #0891b2;">
+              <i class="fa-solid fa-laptop-code"></i>
+            </div>
+            <div class="course-item-info">
+              <div class="course-item-name">Computer Fundamentals</div>
+              <div class="course-item-meta">Skill &bull; SEC</div>
+            </div>
+            
+          </a>
+          <a href="../Digital-Marketing-SVGDC/index.html" class="course-dropdown-item current">
+            <div class="course-item-icon" style="background: #d9770622; color: #d97706;">
+              <i class="fa-solid fa-bullhorn"></i>
+            </div>
+            <div class="course-item-info">
+              <div class="course-item-name">Digital Marketing</div>
+              <div class="course-item-meta">Skill &bull; SEC</div>
+            </div>
+            <span class="course-current-pill">Current</span>
+          </a>
+          </div>
+        </div>
+      </div>
 
       <!-- YouTube Channel Promotion -->
       <a href="https://www.youtube.com/@TheCompetitiveEdge-b4z" target="_blank" rel="noopener noreferrer" class="yt-promo-btn" title="Visit our Official YouTube Channel: The Competitive Edge (S.V.A. Govt. Degree College, Srikalahasti)" aria-label="Visit The Competitive Edge Official YouTube Channel">
@@ -85,6 +292,10 @@
           <i class="fa-solid fa-arrow-up-right-from-square"></i>
         </span>
       </a>
+
+            <!-- Presentation & Teacher Annotation Tools -->
+      <button class="action-pill pill-red" onclick="window.PresentationTools.toggleAnnotationToolbar();" title="Draw, write, underline, or laser-point on the page (Shortcut: Alt+P)">✏️ Pen &amp; Pointer</button>
+      <button id="presModeBtn" class="action-pill pill-blue" onclick="window.PresentationTools.togglePresentationMode();" title="Enter Presentation Mode (F11/Esc)">📽 Presentation Mode</button>
 
       <button class="theme-toggle-btn" id="theme-toggle-btn" aria-label="Toggle Dark/Light Mode" title="Toggle Theme">
         <i class="fa-solid fa-moon"></i>
@@ -109,9 +320,9 @@
       <div class="sidebar-width-toolbar">
         <div class="width-presets-group" title="Quick Width Presets">
           <span class="width-label"><i class="fa-solid fa-arrows-left-right"></i> Width:</span>
-          <button type="button" class="btn-width-preset" data-width="210" title="Narrow Sidebar (210px)">Narrow</button>
-          <button type="button" class="btn-width-preset active" data-width="280" title="Default Sidebar (280px)">Default</button>
-          <button type="button" class="btn-width-preset" data-width="360" title="Broad Sidebar (360px)">Broad</button>
+          <button type="button" class="btn-width-preset" data-width="220" title="Narrow Sidebar (220px)">Narrow</button>
+          <button type="button" class="btn-width-preset active" data-width="290" title="Default Sidebar (290px)">Default</button>
+          <button type="button" class="btn-width-preset" data-width="380" title="Broad Sidebar (380px)">Broad</button>
         </div>
         <button type="button" class="btn-sidebar-collapse" id="sidebar-collapse-btn" title="Collapse Sidebar Menu">
           <i class="fa-solid fa-angles-left"></i>
@@ -122,8 +333,8 @@
       <div class="sidebar-search-box">
         <div class="sidebar-input-wrapper">
           <i class="fa-solid fa-filter"></i>
-          <input type="text" class="sidebar-search-input" id="sidebar-search-input" placeholder="Filter Digital Marketing topics..." autocomplete="off">
-          <kbd class="sidebar-search-kbd">Ctrl K</kbd>
+          <input type="text" class="sidebar-search-input" id="sidebar-search-input" placeholder="Filter digital marketing topics..." autocomplete="off">
+          <kbd class="sidebar-search-kbd" title="Press Ctrl + K to search whole syllabus">Ctrl K</kbd>
         </div>
       </div>
 
@@ -134,7 +345,6 @@
     <!-- Draggable Sidebar Resizer Handle -->
     <div class="sidebar-resizer" id="sidebar-resizer" title="Drag to adjust sidebar width (Double-click to reset)"></div>
 
-    <!-- Reading & Interactive Main Pane -->
     <main class="app-main" id="app-main">
       <div class="content-wrapper" id="topic-content-mount">
         <!-- Dynamic Topic Content Injected via app.js -->
@@ -148,7 +358,9 @@
       <section class="bottom-yt-promo-container" aria-label="Official YouTube Channel Promotion">
         <div class="bottom-yt-card">
           <div class="bottom-yt-left">
-            <img src="Logo-TheCompetitiveEdge.jpg" alt="The Competitive Edge Crest Logo" class="bottom-yt-crest">
+            <a href="https://www.youtube.com/@TheCompetitiveEdge-b4z" target="_blank" rel="noopener noreferrer" title="Visit The Competitive Edge on YouTube">
+              <img src="Logo-TheCompetitiveEdge.jpg" alt="The Competitive Edge Crest Logo" class="bottom-yt-crest">
+            </a>
           </div>
           <div class="bottom-yt-body">
             <div class="bottom-yt-badge">
@@ -160,35 +372,37 @@
             </p>
             <div class="bottom-yt-desc">
               <p>
-                <strong>Welcome to The Competitive Edge</strong> &mdash; your comprehensive academic and career excellence destination! 🎯
+                <strong>Welcome to The Competitive Edge</strong> &mdash; your comprehensive academic platform for university physics, foundational concepts, and competitive examination masterclasses! 🎯
               </p>
               <p>
-                Crafted for undergraduate degree scholars and competitive aspirants. We empower students with modern digital skills, analytical reasoning, physics lectures, and competitive acumen required for university distinctions, corporate placements, and competitive examinations.
+                A comprehensive educational platform for degree physics scholars and competitive aspirants. We provide high-quality video masterclasses in Core Physics, Electronic Instrumentation, Quantitative Aptitude, Reasoning, and Applied Science.
               </p>
-              
               <div class="bottom-yt-features-title">
-                📚 What you’ll find on this channel:
+                📚 What you will find on this channel:
               </div>
               <ul class="bottom-yt-grid">
-                <li><span>📰</span> Daily Current Affairs &amp; Quizzes</li>
-                <li><span>🚀</span> Digital Marketing, SEO &amp; Analytics</li>
-                <li><span>🔢</span> Quantitative Aptitude &amp; Arithmetic</li>
-                <li><span>🧠</span> Reasoning &ndash; Verbal &amp; Non-Verbal</li>
-                <li><span>📖</span> General English &amp; Corporate Communication</li>
-                <li><span>🔬</span> General Science &amp; Physics Major Lectures</li>
-                <li><span>💻</span> Python Programming &amp; Computer Automation</li>
-                <li><span>🎯</span> Practice Questions, Mock Exams &amp; Shortcuts</li>
+                <li><span>📐</span> Mathematical Physics &amp; Vector Calculus</li>
+                <li><span>🌌</span> Classical Mechanics &amp; Relativity</li>
+                <li><span>🌊</span> Waves, Oscillations &amp; Wave Optics</li>
+                <li><span>🔥</span> Thermodynamics &amp; Statistical Mechanics</li>
+                <li><span>⚛️</span> Atomic, Molecular &amp; Nuclear Physics</li>
+                <li><span>⚡</span> Electricity, Magnetism &amp; Electromagnetic Theory</li>
+                <li><span>💡</span> Basic &amp; Analog Electronics with Lab Experiments</li>
+                <li><span>🔬</span> Applied Optics, Lasers &amp; Fiber Optics</li>
+                <li><span>🧊</span> Solid State Physics &amp; Material Science</li>
+                <li><span>💻</span> Python Programming &amp; Computer Fundamentals</li>
+                <li><span>🎯</span> Lab Demonstrations, Data Analysis &amp; Viva Voce</li>
+                <li><span>💡</span> Competitive Exam Strategies, CSIR-NET, GATE &amp; IIT-JAM</li>
               </ul>
-
               <div class="bottom-yt-target-exams">
-                Tailored for undergraduate degree examinations and aspirants preparing for UPSC, SSC CGL, Banking (IBPS/SBI), Railways (RRB), APPSC, TSPSC, State PSCs, Defence, and industry certifications.
+                Tailored for scholars preparing for CSIR-NET Physical Sciences, GATE Physics, IIT-JAM, UPSC, APPSC/TSPSC Degree Lecturers, SSC CGL, and university semester examinations.
               </div>
             </div>
             <div class="bottom-yt-actions">
               <a href="https://www.youtube.com/@TheCompetitiveEdge-b4z" target="_blank" rel="noopener noreferrer" class="btn-yt-big-subscribe" title="Subscribe to The Competitive Edge on YouTube">
                 <i class="fa-brands fa-youtube"></i> Subscribe &amp; Watch Lectures <i class="fa-solid fa-arrow-up-right-from-square"></i>
               </a>
-              <span class="bottom-yt-stat"><i class="fa-solid fa-circle-check"></i> Free Academic Lectures &amp; Competitive Exam Prep</span>
+              <span class="bottom-yt-stat"><i class="fa-solid fa-circle-check"></i> Free Academic Lectures &amp; Competitive Exam Guidance</span>
             </div>
           </div>
         </div>
@@ -196,7 +410,7 @@
 
       <!-- Footer -->
       <footer class="app-footer">
-        <div class="footer-dept-badge" style="background: rgba(249, 115, 22, 0.12); color: #ea580c; border: 1px solid rgba(249, 115, 22, 0.25);">DEPARTMENT OF PHYSICS</div>
+        <div class="footer-dept-badge">DEPARTMENT OF PHYSICS</div>
         <p>S.V.A. Govt. Degree College, Srikalahasti, Tirupati District, Andhra Pradesh</p>
         <p style="margin-top: 0.35rem; font-size: 0.76rem; color: var(--text-muted);">
           Semester-III &bull; Skill Enhancement Course: Digital Marketing &bull; APSCHE w.e.f. AY 2025-26 &bull; Live Interactive Web Portal
@@ -230,5 +444,6 @@
   <script src="js/navigation.js"></script>
   <script src="js/app.js"></script>
 
+  <script src="js/presentation-tools.js" defer></script>
 </body>
 </html>
